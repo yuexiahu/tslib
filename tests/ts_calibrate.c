@@ -214,8 +214,9 @@ static void clearbuf(struct tsdev *ts)
 	struct timeval tv;
 	int nfds;
 	struct ts_sample sample;
+	int max_counter = 100;
 
-	while (1) {
+	while (max_counter--) {
 		FD_ZERO(&fdset);
 		FD_SET(fd, &fdset);
 

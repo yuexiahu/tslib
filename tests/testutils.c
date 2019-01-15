@@ -84,26 +84,38 @@ void getxy(struct tsdev *ts, int *x, int *y)
 #define MAX_SAMPLES 128
 	struct ts_sample samp[MAX_SAMPLES];
 	int index, middle;
+	int ret;
 
-	do {
-		if (ts_read_raw(ts, &samp[0], 1) < 0) {
-			perror("ts_read_raw");
-			close_framebuffer();
-			exit(1);
-		}
-	} while (samp[0].pressure == 0);
+	while (1) {
+        ret = ts_read_raw(ts, &samp[0], 1);
+        if (ret < 0) {
+            perror("ts_read_raw");
+            close_framebuffer();
+            exit(1);
+        } else if (ret == 0)
+            continue;
+
+        if (samp[0].pressure > 0)
+            break;
+	}
 
 	/* Now collect up to MAX_SAMPLES touches into the samp array. */
-	index = 0;
-	do {
-		if (index < MAX_SAMPLES-1)
-			index++;
-		if (ts_read_raw(ts, &samp[index], 1) < 0) {
-			perror("ts_read_raw");
-			close_framebuffer();
-			exit(1);
-		}
-	} while (samp[index].pressure > 0);
+	index = 1;
+	while (1) {
+        ret = ts_read_raw(ts, &samp[index], 1);
+        if (ret < 0) {
+            perror("ts_read_raw");
+            close_framebuffer();
+            exit(1);
+        } else if (ret == 0)
+            continue;
+
+        if (samp[index].pressure == 0)
+            break;
+
+        if (index < MAX_SAMPLES-1)
+            index++;
+    }
 	printf("Took %d samples...\n", index);
 
 	/*
@@ -146,26 +158,38 @@ void getxy_validate(struct tsdev *ts, int *x, int *y)
 #define MAX_SAMPLES 128
 	struct ts_sample samp[MAX_SAMPLES];
 	int index;
+	int ret;
 
-	do {
-		if (ts_read(ts, &samp[0], 1) < 0) {
-			perror("ts_read");
-			close_framebuffer();
-			exit(1);
-		}
-	} while (samp[0].pressure == 0);
+    while (1) {
+        ret = ts_read(ts, &samp[0], 1);
+        if (ret < 0) {
+            perror("ts_read");
+            close_framebuffer();
+            exit(1);
+        } else if (ret == 0)
+            continue;
+
+        if (samp[0].pressure > 0)
+            break;
+    }
 
 	/* Now collect up to MAX_SAMPLES touches into the samp array. */
-	index = 0;
-	do {
-		if (index < MAX_SAMPLES-1)
-			index++;
-		if (ts_read(ts, &samp[index], 1) < 0) {
-			perror("ts_read");
-			close_framebuffer();
-			exit(1);
-		}
-	} while (samp[index].pressure > 0);
+    index = 1;
+    while (1) {
+        ret = ts_read(ts, &samp[index], 1);
+        if (ret < 0) {
+            perror("ts_read");
+            close_framebuffer();
+            exit(1);
+        } else if (ret == 0)
+            continue;
+
+        if (samp[index].pressure == 0)
+            break;
+
+        if (index < MAX_SAMPLES-1)
+            index++;
+    }
 	printf("Took %d samples...\n", index);
 
 	if (x)
