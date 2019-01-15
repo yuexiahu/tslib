@@ -8,6 +8,8 @@
 tslib consists of the library _libts_ and tools that help you _calibrate_ and
 _use it_ in your environment.
 
+[中文使用说明](README_zh.md)
+
 ## contact
 If you have problems, questions, ideas or suggestions, please contact us by
 writing an email to [tslib@lists.infradead.org](mailto:tslib@lists.infradead.org),
@@ -89,19 +91,19 @@ You may override defaults. In most cases you won't need to do so though:
 
     TSLIB_TSDEVICE          Touchscreen device file name.
                             Default:                automatic detection (on Linux)
-
+    
     TSLIB_CALIBFILE         Calibration file.
                             Default:                ${sysconfdir}/pointercal
-
+    
     TSLIB_CONFFILE          Config file.
                             Default:                ${sysconfdir}/ts.conf
-
+    
     TSLIB_PLUGINDIR         Plugin directory.
                             Default:                ${datadir}/plugins
-
+    
     TSLIB_CONSOLEDEVICE     Console device. (not needed when using --with-sdl2)
                             Default:                /dev/tty
-
+    
     TSLIB_FBDEVICE          Framebuffer device.
                             Default:                /dev/fb0
 
@@ -173,12 +175,12 @@ and create a systemd service file, like `/usr/lib/systemd/system/ts_uinput.servi
       Description=touchscreen input
       Wants=dev-input-ts_raw.device
       After=dev-input-ts_raw.device
-
+    
       [Service]
       Type=oneshot
       EnvironmentFile=/etc/ts.env
       ExecStart=/bin/sh -c 'exec /usr/bin/ts_uinput &> /var/log/ts_uinput.log'
-
+    
       [Install]
       WantedBy=multi-user.target
 
@@ -351,7 +353,7 @@ Parameters:
 * `threshold`
 
 	x or y minimum distance between two samples to start applying the
-        filter. Default: 2.
+  ​      filter. Default: 2.
 
 Example: `module lowpass factor=0.5 threshold=1`
 
@@ -476,7 +478,7 @@ If you want to support tslib < 1.2, while still support multitouch and all
 recent versions of tslib, you'd do something like this:
 
     #include <tslib.h>
-
+    
     #ifndef TSLIB_VERSION_MT
             /* ts_read() as before (due to old tslib) */
     #else
@@ -494,25 +496,25 @@ This is a complete example program, similar to `ts_print_mt.c`:
     #include <sys/time.h>
     #include <unistd.h>
     #include <errno.h>
-
+    
     #include <tslib.h>
-
+    
     #define SLOTS 5
     #define SAMPLES 1
-
+    
     int main(int argc, char **argv)
     {
         struct tsdev *ts;
         char *tsdevice = NULL;
         struct ts_sample_mt **samp_mt = NULL;
         int ret, i, j;
-
+    
         ts = ts_setup(tsdevice, 0);
         if (!ts) {
                 perror("ts_setup");
                 return -1;
         }
-
+    
         samp_mt = malloc(SAMPLES * sizeof(struct ts_sample_mt *));
         if (!samp_mt) {
                 ts_close(ts);
@@ -526,7 +528,7 @@ This is a complete example program, similar to `ts_print_mt.c`:
                         return -ENOMEM;
                 }
         }
-
+    
         while (1) {
                 ret = ts_read_mt(ts, samp_mt, SLOTS, SAMPLES);
                 if (ret < 0) {
@@ -534,28 +536,28 @@ This is a complete example program, similar to `ts_print_mt.c`:
                         ts_close(ts);
                         exit(1);
                 }
-
+    
                 for (j = 0; j < ret; j++) {
                 	for (i = 0; i < SLOTS; i++) {
-			#ifdef TSLIB_MT_VALID
-				if (!(samp_mt[j][i].valid & TSLIB_MT_VALID))
-					continue;
-			#else
-				if (samp_mt[j][i].valid < 1)
-					continue;
-			#endif
-
-				printf("%ld.%06ld: (slot %d) %6d %6d %6d\n",
-				       samp_mt[j][i].tv.tv_sec,
-				       samp_mt[j][i].tv.tv_usec,
-				       samp_mt[j][i].slot,
-				       samp_mt[j][i].x,
-				       samp_mt[j][i].y,
-				       samp_mt[j][i].pressure);
+    		#ifdef TSLIB_MT_VALID
+    			if (!(samp_mt[j][i].valid & TSLIB_MT_VALID))
+    				continue;
+    		#else
+    			if (samp_mt[j][i].valid < 1)
+    				continue;
+    		#endif
+    
+    			printf("%ld.%06ld: (slot %d) %6d %6d %6d\n",
+    			       samp_mt[j][i].tv.tv_sec,
+    			       samp_mt[j][i].tv.tv_usec,
+    			       samp_mt[j][i].slot,
+    			       samp_mt[j][i].x,
+    			       samp_mt[j][i].y,
+    			       samp_mt[j][i].pressure);
                         }
                 }
         }
-
+    
         ts_close(ts);
     }
 
@@ -563,7 +565,7 @@ This is a complete example program, similar to `ts_print_mt.c`:
 If you know how many slots your device can handle, you could avoid malloc:
 
     struct ts_sample_mt TouchScreenSamples[SAMPLES][SLOTS];
-
+    
     struct ts_sample_mt (*pTouchScreenSamples)[SLOTS] = TouchScreenSamples;
     struct ts_sample_mt *ts_samp[SAMPLES];
     for (i = 0; i < SAMPLES; i++)
@@ -678,7 +680,6 @@ that get called in the chain of filters.
 |`ts_conf_get` | 1.18 |
 |`ts_conf_set` | 1.18 |
 
-
 ***
 
 ## building tslib
@@ -724,7 +725,7 @@ Adding `tslib::tslib` as a link target will add required dependencies and includ
     find_package(tslib 1.16)
     add_executable(tslib_client main.c)
     target_link_libraries(tslib_client PUBLIC tslib::tslib)
-	
+
 
 ### portable `ts_calibrate` and `ts_test_mt` using SDL2
 
