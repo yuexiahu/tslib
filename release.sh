@@ -107,7 +107,8 @@ make distclean
 	--enable-mk712 \
 	--enable-tatung \
 	--enable-input-evdev \
-	--enable-ucb1x00
+	--enable-ucb1x00 \
+    --enable-ctp
 
 make -j"${NUMCPUS}"
 make clean
@@ -148,7 +149,8 @@ make distclean
 	--enable-dejitter=static \
 	--enable-linear=static \
 	--enable-linear-h2200=static \
-	--enable-lowpass=static
+	--enable-lowpass=static \
+    --enable-ctp=static
 
 make -j"${NUMCPUS}"
 make clean

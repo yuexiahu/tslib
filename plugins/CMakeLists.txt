@@ -71,6 +71,8 @@ TSLIB_CHECK_MODULE(cy8mrln-palmpre   OFF "Enable building of cy8mrln-palmpre raw
 TSLIB_CHECK_MODULE(galax             OFF "Enable building of HID USB eGalax raw module (Linux /dev/hiddevN support)" galax-raw.c) 
 TSLIB_CHECK_MODULE(one-wire-ts-input OFF "Enable building of FriendlyARM one-wire raw module" one-wire-ts-input-raw.c)
 
+TSLIB_CHECK_MODULE(ctp               ON "Enable building of ctp raw module (Linux /dev/ctp support)" ctp-raw.c) 
+
 if (${enable-input-evdev})
 	find_package(PkgConfig)
 	pkg_check_modules(LIBEVDEV REQUIRED IMPORTED_TARGET libevdev>=0.4)

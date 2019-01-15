@@ -131,6 +131,8 @@ TSLIB_CHECK_MODULE([cy8mrln-palmpre], [no], [Enable building of cy8mrln-palmpre 
 TSLIB_CHECK_MODULE([galax], [no], [Enable building of HID USB eGalax raw module (Linux /dev/hiddevN support)])
 TSLIB_CHECK_MODULE([one-wire-ts-input], [no], [Enable building of FriendlyARM one-wire raw module])
 
+TSLIB_CHECK_MODULE([ctp], [yes], [Enable building of ctp raw module (Linux /dev/ctp support)])
+
 AC_MSG_CHECKING([where to place modules])
 AC_ARG_WITH(plugindir,
         AS_HELP_STRING([--with-plugindir=ARG],

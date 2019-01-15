@@ -117,6 +117,9 @@ static const struct tslib_module_desc tslib_modules[] = {
 #ifdef TSLIB_STATIC_WAVESHARE_MODULE
 	{ "waveshare", waveshare_mod_init },
 #endif
+#ifdef TSLIB_STATIC_CTP_MODULE
+	{ "ctp", ctp_mod_init },
+#endif
 };
 
 #define countof(arr) (sizeof(arr) / sizeof((arr)[0]))

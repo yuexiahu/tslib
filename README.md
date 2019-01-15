@@ -770,6 +770,7 @@ __disabled__:
 * `mk712`
 * `ucb1x00`
 * `tatung`
+* `ctp`
 
 Please note that this list may grow over time. If you rely on
 a particular input plugin, you should enable it explicitly. On Linux
